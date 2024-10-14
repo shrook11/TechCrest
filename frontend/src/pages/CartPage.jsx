@@ -12,11 +12,11 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/productCard';
-import { CartContext } from '../context/cart/cartContext';
+import { CartContext, useCart } from '../context/cart/cartContext';
 
 
 function CartPage() {
-  const{cart,addToCart,removeFromCart}=useContext(CartContext);
+  const { cart,addToCart,removeFromCart}=useCart();
 const sum=useMemo(()=>{
   return cart.reduce((prev,item)=>{
   return prev+ item.price*item.quantity ;

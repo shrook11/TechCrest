@@ -24,92 +24,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from "./components/header.jsx";
 import { useEffect,useState } from "react";
 import ProductsProvider from "./store/ProductsContext.jsx";
-import { CartContext } from "./context/cart/cartContext.jsx";
+import CartProvider, { CartContext } from "./context/cart/cartContext.jsx";
+import WishlistProvider from "./store/WishlistContext.jsx";
 
 
 const App = () => {
-  const [cart,setCart]=useState([]);
-  const [wishlist, setWishlist] = useState([]);
-
-  useEffect(() => {
-    const cartLocalState = localStorage.getItem("cart");
-    if (cartLocalState) {
-       const cart = JSON.parse(cartLocalState);
-       setCart(Array.isArray(cart) ? cart : []); 
-    } else {
-       localStorage.setItem("cart", JSON.stringify([]));
-    }
  
-    const wishlistLocalState = localStorage.getItem("wishlist");
-    if (wishlistLocalState) {
-       const wishlist = JSON.parse(wishlistLocalState);
-       setWishlist(Array.isArray(wishlist) ? wishlist : []); 
-    } else {
-       localStorage.setItem("wishlist", JSON.stringify([]));
-    }
- }, []);
- const removeFromWishlist = (product) => {
-  setWishlist((prevsArray) => {
-     const validPrevArray = Array.isArray(prevsArray) ? prevsArray : []; // Ensure array
-     const newList = validPrevArray.filter((item) => item.title !== product.title);
-     localStorage.setItem("wishlist", JSON.stringify(newList));
-     return newList;
-  });
-};
-
-const addToWishlist = (product) => {
-  setWishlist((prevWishlistArray) => {
-     const validPrevArray = Array.isArray(prevWishlistArray) ? prevWishlistArray : []; // Ensure array
-     const idx = validPrevArray.findIndex((item) => item.title === product.title);
-     if (idx > -1) {
-        localStorage.setItem("wishlist", JSON.stringify(validPrevArray));
-        return validPrevArray;
-     } else {
-        const updatedWishlist = [...validPrevArray, product];
-        localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
-        return updatedWishlist;
-     }
-  });
-};
-const addToCart = (product) => {
-  setCart((prevCartArray) => {
-     const validPrevArray = Array.isArray(prevCartArray) ? prevCartArray : [];
-     const idx = validPrevArray.findIndex((_product) => _product.title === product.title);
-     if (idx > -1) {
-        const updatedProduct = { ...validPrevArray[idx], quantity: validPrevArray[idx].quantity + 1 };
-        const updatedCart = [...validPrevArray];
-        updatedCart[idx] = updatedProduct;
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
-        return updatedCart;
-     } else {
-        const newProduct = { ...product, quantity: 1 };
-        const updatedCart = [...validPrevArray, newProduct];
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
-        return updatedCart;
-     }
-  });
-};
-
-const removeFromCart = (product) => {
-  setCart((prevCartArray) => {
-     const validPrevArray = Array.isArray(prevCartArray) ? prevCartArray : [];
-     const newCart = validPrevArray.filter((_product) => _product.title !== product.title);
-     localStorage.setItem("cart", JSON.stringify(newCart));
-     return newCart;
-  });
-};
   return (
     <ProductsProvider>
-    <CartContext.Provider 
-    value={{
-      cart,
-      addToCart,
-      removeFromCart,
-      wishlist,
-      addToWishlist,
-      removeFromWishlist,
-      }}
-      >
+      <CartProvider>
+      <WishlistProvider>
     <Router>
       <Routes>
         <Route path="/" element={<Layout />}>
@@ -136,8 +60,9 @@ const removeFromCart = (product) => {
         </Route>
       </Routes>
     </Router>
-    </CartContext.Provider>  
-</ProductsProvider>
+    </WishlistProvider>
+    </CartProvider>
+    </ProductsProvider>
   );
 };
 

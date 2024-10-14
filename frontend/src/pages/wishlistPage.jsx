@@ -6,9 +6,10 @@ import './App.css';
 import { useContext } from 'react';
 import ProductCard from '../components/productCard';
 import { CartContext } from '../context/cart/cartContext';
+import { useWishlist } from '../store/WishlistContext';
 
 function WishlistPage() {
-    const{wishlist}=useContext(CartContext);
+   const {wishlist}=useWishlist();
 
     return( 
      <Container className='pt-5'>

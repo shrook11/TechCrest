@@ -4,13 +4,14 @@ import SearchDropdown from './searchDropDown.jsx'; // Import the dropdown compon
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Badge from 'react-bootstrap/Badge';
 import './App.css' ;
-import { CartContext } from '../context/cart/cartContext.jsx';
+import { CartContext, useCart } from '../context/cart/cartContext.jsx';
 import "../styles/Header.css"; // Link to your CSS file (optional)
+import { useWishlist } from '../store/WishlistContext.jsx';
 
 
 const Header = () => {
-  const{cart,addToCart,wishlist}=useContext(CartContext);
-
+  const { cart}=useCart(); 
+  const { wishlist}=useWishlist(); 
   const [searchTerm, setSearchTerm] = useState(''); // For managing the search input
   const [showDropdown, setShowDropdown] = useState(false); // For showing the dropdown
   const navigate = useNavigate(); // Hook to programmatically navigate
